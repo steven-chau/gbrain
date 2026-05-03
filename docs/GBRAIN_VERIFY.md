@@ -111,8 +111,9 @@ gbrain stats
 gbrain embed --stale
 ```
 
-If `OPENAI_API_KEY` is not set, embeddings can't be generated. Keyword search
-still works without embeddings, but hybrid/semantic search won't.
+If neither `OPENAI_API_KEY` nor `DASHSCOPE_API_KEY` is set, embeddings can't be
+generated. Keyword search still works without embeddings, but hybrid/semantic
+search won't.
 
 ### 4c. End-to-End Test
 
@@ -156,13 +157,14 @@ gbrain stats
 
 **Expected:** Embedded chunk count matches (or is close to) total chunk count.
 
-**If zero or very low:** `OPENAI_API_KEY` may be missing or invalid. Check:
+**If zero or very low:** No embedding API key is set. Check for either provider:
 
 ```bash
-echo $OPENAI_API_KEY | head -c 10
+echo $OPENAI_API_KEY | head -c 10     # OpenAI
+echo $DASHSCOPE_API_KEY | head -c 10  # Qwen/DashScope
 ```
 
-If blank, set the key. Then:
+If both are blank, set either key (Qwen takes priority when both are set). Then:
 
 ```bash
 gbrain embed --stale
