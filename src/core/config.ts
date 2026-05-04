@@ -50,6 +50,21 @@ export interface GBrainConfig {
     /** false disables PII scrubbing before insert. Defaults to true. */
     scrub_pii?: boolean;
   };
+  /**
+   * Optional embedding provider config. When absent, the embedding module
+   * auto-detects the provider by checking DASHSCOPE_API_KEY (→ qwen) then
+   * OPENAI_API_KEY (→ openai). Set explicitly to override auto-detection.
+   */
+  embedding?: {
+    /** 'openai' or 'qwen'. Overrides auto-detection. */
+    provider?: string;
+    /** Model name. Defaults: text-embedding-3-large (openai), text-embedding-v4 (qwen). */
+    model?: string;
+    /** API key. If unset, falls back to the provider's standard env var. */
+    api_key?: string;
+    /** Base URL override. Defaults to the provider's standard endpoint. */
+    base_url?: string;
+  };
 }
 
 /**
@@ -78,6 +93,10 @@ export function loadConfig(): GBrainConfig | null {
     engine: inferredEngine,
     ...(dbUrl ? { database_url: dbUrl } : {}),
     ...(process.env.OPENAI_API_KEY ? { openai_api_key: process.env.OPENAI_API_KEY } : {}),
+    embedding: {
+      ...(fileConfig?.embedding ?? {}),
+      ...(process.env.DASHSCOPE_API_KEY ? { api_key: process.env.DASHSCOPE_API_KEY } : {}),
+    },
   };
   return merged as GBrainConfig;
 }

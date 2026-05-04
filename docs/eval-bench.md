@@ -104,9 +104,9 @@ Replay is not pure. Three things can drift between capture and replay:
 1. **Brain state** — your brain probably has more pages now than when the
    snapshot was taken. Unless you explicitly seed a fixed corpus, mean
    Jaccard will drop simply because new pages are eligible.
-2. **Embedding source** — if you changed `OPENAI_API_KEY` between capture
-   and replay (or the embedding model rotated), vector-path results drift
-   even with identical code.
+2. **Embedding source** — if you changed embedding providers or API keys
+   between capture and replay (or the embedding model rotated), vector-path
+   results drift even with identical code.
 3. **Capture cap** — captured `retrieved_slugs` is a deduped set; it doesn't
    preserve internal ranking metadata. Two tools can return the same slug
    set with different scores — Jaccard will say 1.0, but a downstream
@@ -117,10 +117,10 @@ Pair them with manual inspection of the top regressions.
 
 ## Cost
 
-Every `query` row in the snapshot embeds the query string via OpenAI to run
-the vector half of `hybridSearch`. Cost is identical to a normal `gbrain
-query` invocation — text-embedding-3-large at OpenAI list price, batched
-inside a single replay row.
+Every `query` row in the snapshot embeds the query string via the active
+embedding provider (OpenAI or Qwen/DashScope) to run the vector half of
+`hybridSearch`. Cost is identical to a normal `gbrain query` invocation —
+priced at the active provider's rate, batched inside a single replay row.
 
 If you're iterating locally and don't want to pay per change, use
 `--limit 50` to cap rows replayed. The 50 most recent rows are usually
