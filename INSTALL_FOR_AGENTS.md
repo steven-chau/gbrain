@@ -17,7 +17,7 @@ If you fetched this file by URL without cloning yet, the companion files live at
 ## Step 1: Install GBrain
 
 ```bash
-git clone https://github.com/garrytan/gbrain.git ~/gbrain && cd ~/gbrain
+git clone https://github.com/steven-chau/gbrain.git ~/gbrain && cd ~/gbrain
 curl -fsSL https://bun.sh/install | bash
 export PATH="$HOME/.bun/bin:$PATH"
 bun install && bun link
